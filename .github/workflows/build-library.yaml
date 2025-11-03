@@ -1,0 +1,30 @@
+name: Build Library
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: '21'
+      - name: install libusb
+        run: wget https://github.com/libusb/libusb/archive/v1.0.26.zip && unzip v1.0.26.zip
+      - name: write local properties
+        run: echo "libusb.dir=$GITHUB_WORKSPACE/libusb-1.0.26" > $GITHUB_WORKSPACE/local.properties
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: build
+        run: ./gradlew :libaums:assembleRelease :libusbcommunication:assemble
+      - name: upload libaums aar
+        with: 
+          name: libaums-aar
+          path: libaums/build/outputs/aar/libaums-release.aar
+      - name: upload libusbcommunication aar
+        with: 
+          name: libusbcommunication-aar
+          path: libusbcommunication/build/outputs/aar/libusbcommunication.aar
+      
