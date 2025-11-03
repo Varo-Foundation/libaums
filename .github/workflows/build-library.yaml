@@ -22,10 +22,12 @@ jobs:
       - name: build
         run: ./gradlew :libaums:assembleRelease :libusbcommunication:assemble
       - name: upload libaums aar
+        uses: actions/upload-artifact@v4
         with: 
           name: libaums-aar
           path: libaums/build/outputs/aar/libaums-release.aar
       - name: upload libusbcommunication aar
+        uses: actions/upload-artifact@v4
         with: 
           name: libusbcommunication-aar
           path: libusbcommunication/build/outputs/aar/libusbcommunication.aar
